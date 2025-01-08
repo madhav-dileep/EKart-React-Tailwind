@@ -1,9 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import Header from '../components/Header'
 import { useParams } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { addToWishlist, removeFromWishlist } from '../redux/slice/wishlistSlice'
+import { addToCart } from '../redux/slice/cartSlice'
 
 const View = () => {
+
+  const dispatch = useDispatch()
+
+  const userWishlist = useSelector(state => state.wishlistReducer) // for getting the wishlist from the store
+  const cart = useSelector(state => state.cartReducer) // for getting the cart from the store
 
   const [product, setProduct] = useState({})// for storing the specific product
   const { pid } = useParams() // for getting the id from the url
@@ -12,17 +19,23 @@ const View = () => {
   // const { allProducts } = useSelector(state => state.productReducer) // for getting the allProducts from the store
   // console.log(allProducts);
 
-
   useEffect(() => {
     if (sessionStorage.getItem("allProducts")) {
-      const allProducts = JSON.parse(sessionStorage.getItem("allProducts"))
+      const allProducts = JSON.parse(sessionStorage.getItem("allProducts"))// for getting the allProducts from the session storage to avoid the loss of data on page refresh
       // console.log(allProducts?.find(item=>item.id==pid));
       setProduct(allProducts?.find(item => item.id == pid))
     }
 
   }, [])
 
-  console.log(product);
+  const addingToCart = () => {
+    dispatch(addToCart(product))
+    if (userWishlist.find(item => item.id == product.id)) {
+      dispatch(removeFromWishlist(product))
+    }
+  }
+
+  // console.log(product);
 
 
   return (
@@ -33,12 +46,12 @@ const View = () => {
           <div>
             <img src={product?.thumbnail} alt='placeholder' className='w-full object-cover' />
             <div className='flex justify-between mt-4 '>
-              <button className='bg-green-500 text-white p-2 rounded-lg'>Add to Cart
+              <button onClick={addingToCart} className='bg-green-500 text-white p-2 rounded-lg'>Add to Cart
               </button>
-              <button className='bg-blue-500 text-white p-2 rounded-lg ms-2'>Add to Wishlist</button>
+              <button onClick={() => { dispatch(addToWishlist(product)) }} className='bg-blue-500 text-white p-2 rounded-lg ms-2'>Add to Wishlist</button>
             </div>
           </div>
-         
+
           <div className='mx-4 px-4'>
             <h3 className='font-bold'>PID : {pid}</h3>
             <h1 className='text-4xl font-bold mb-2'>
@@ -52,7 +65,7 @@ const View = () => {
             <h4 className='capitalize font-bold'>Category : <span className='font-normal'>{product?.category}</span></h4>
             <h3 className='text-md font-semibold mt-2 mb-2'>Description: <span className='font-light text-justify'>{product?.description}</span></h3>
 
-            
+
             <div className='reviews mt-5'>
               <h3 className='text-2xl font-bold mt-4'>Client Reviews</h3>
               {
@@ -61,8 +74,8 @@ const View = () => {
                     <div key={review?.id} className='border p-2 my-2 ms-2'>
                       <h4 className='font-semibold'>{review?.reviewerName} </h4>
                       <span className='text-xs '>
-                        {review?.rating} 
-                          <i className='fas fa-star text-yellow-500 ms-2'></i>
+                        {review?.rating}
+                        <i className='fas fa-star text-yellow-500 ms-2'></i>
                       </span>
                       <p className='text-sm'>{review?.comment}</p>
                     </div>
