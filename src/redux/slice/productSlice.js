@@ -5,7 +5,8 @@ import axios from "axios";
 export const fetchProducts = createAsyncThunk("products/fetchProducts", async () => {
     // const response = await axios.get("https://fakestoreapi.com/products");
     const response = await axios.get("https://dummyjson.com/products");
-    console.log(response.data.products);
+    // console.log(response.data.products);
+    sessionStorage.setItem("allProducts",JSON.stringify(response.data.products))
     return response.data.products;
 })
 

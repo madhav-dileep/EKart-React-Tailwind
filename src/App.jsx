@@ -16,7 +16,7 @@ function App() {
         <Route index element={<Home/>}/>
         <Route path='/wishlist' element={<Wishlist/>}/>
         <Route path='/cart' element={<Cart/>}/>
-        <Route path='/:id/view' element={<View/>}/>
+        <Route path='/:pid/view' element={<View/>}/>
         <Route path='/*' element={<Pnf/>}/>
       </Routes>
 
