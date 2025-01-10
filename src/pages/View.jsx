@@ -28,8 +28,18 @@ const View = () => {
 
   }, [])
 
+  const addingToWishlist = () => {
+    const existingProduct = cart?.find(item => item.id == product.id)
+    if(existingProduct){
+      alert("Item already in cart!")
+    }else{
+      dispatch(addToWishlist(product))
+    }
+  }
+
   const addingToCart = () => {
     dispatch(addToCart(product))
+    alert("Added to cart!")
     if (userWishlist.find(item => item.id == product.id)) {
       dispatch(removeFromWishlist(product))
     }
@@ -46,9 +56,9 @@ const View = () => {
           <div>
             <img src={product?.thumbnail} alt='placeholder' className='w-full object-cover' />
             <div className='flex justify-between mt-4 '>
+              <button onClick={addingToWishlist} className='bg-blue-500 text-white p-2 rounded-lg ms-2'>Add to Wishlist</button>
               <button onClick={addingToCart} className='bg-green-500 text-white p-2 rounded-lg'>Add to Cart
               </button>
-              <button onClick={() => { dispatch(addToWishlist(product)) }} className='bg-blue-500 text-white p-2 rounded-lg ms-2'>Add to Wishlist</button>
             </div>
           </div>
 

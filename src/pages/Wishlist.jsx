@@ -15,6 +15,7 @@ const Wishlist = () => {
   const addingToCart = (product) => {
     // console.log(product);
       dispatch(addToCart(product))
+      alert("Added to cart!")
       if(userWishlist.find(item => item.id == product.id)){
         dispatch(removeFromWishlist(product))
       }
